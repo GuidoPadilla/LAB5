@@ -37,5 +37,15 @@
         <action
             android:id="@+id/action_answerFragment_to_gameFragment"
             app:destination="@id/gameFragment" />
+        <action
+            android:id="@+id/action_answerFragment_to_finalFragment"
+            app:destination="@id/finalFragment" />
+        <action
+            android:id="@+id/action_answerFragment_to_titleFragment"
+            app:destination="@id/titleFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/finalFragment"
+        android:name="com.example.lab5.FinalFragment"
+        android:label="FinalFragment" />
 </navigation>

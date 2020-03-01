@@ -19,7 +19,7 @@ import com.example.lab5.databinding.FragmentTitleBinding
 class TitleFragment : Fragment() {
 
     private lateinit var binding: FragmentTitleBinding
-    private lateinit var viewModel: MainViewModel
+    /*private lateinit var viewModel: MainViewModel*/
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,16 +32,29 @@ class TitleFragment : Fragment() {
             container,
             false
         )
-        viewModel = activity?.run {
+
+        val application = requireNotNull(this.activity).application
+
+        val dataSource = QuestionDatabase.getInstance(application).questionDatabaseDao
+        val viewModelFactory = MainViewModelFactory(dataSource, application)
+
+        val viewModel =
+            ViewModelProviders.of(
+                this, viewModelFactory).get(MainViewModel::class.java)
+        viewModel.verifyCount()
+        /*viewModel = activity?.run {
             ViewModelProviders.of(this).get(MainViewModel::class.java)
         } ?: throw Exception("HOOLA")
+        */
+
         /*viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)*/
         binding.floatingActionButton.setOnClickListener{
             it.findNavController().navigate(R.id.action_titleFragment_to_optionFragment)
         }
 
         binding.startButton.setOnClickListener{
-            if (viewModel._size.value != 0) {
+            val s = viewModel._qtns.value?.size
+            if (s != 0) {
                 it.findNavController().navigate(R.id.action_titleFragment_to_gameFragment)
             }
             else{
@@ -49,8 +62,8 @@ class TitleFragment : Fragment() {
             }
         }
 
-        viewModel._size.observe(viewLifecycleOwner, Observer {
-            binding.texto1.text =  viewModel._questions.toString()
+        viewModel._qtns.observe(viewLifecycleOwner, Observer {
+            binding.texto1.text =  viewModel._qtns.value.toString()
         })
         return binding.root
     }

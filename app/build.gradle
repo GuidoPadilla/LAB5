@@ -14,6 +14,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -47,4 +48,13 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
     implementation "androidx.navigation:navigation-fragment-ktx:2.2.0"
     implementation "androidx.navigation:navigation-ui-ktx:2.2.0"
+
+    def room_version = "2.2.4"
+    apply plugin: 'kotlin-kapt'
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
+    // Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.0"
 }
