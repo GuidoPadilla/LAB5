@@ -51,28 +51,26 @@ class AnswerFragment : Fragment() {
         })
 
         viewModel._answers.observe(viewLifecycleOwner, Observer {
-            if(viewModel._answers.value?.size!! != 0){
-            binding.numText.text = viewModel._polls.value?.size.toString()
-            var suma: Int = 0
-            for(answer in viewModel._answers.value!!){
-                var cont: Int = 0
-                var final: Int = 0
-                for(question in viewModel._qtns.value!!)
-                {
-                    if(question.Id!! == answer.question_id!!)
-                        final = cont
-                    cont++
+            if(!(it.isNullOrEmpty() || viewModel._polls.value.isNullOrEmpty() || viewModel._qtns.value.isNullOrEmpty())) {
+                if (viewModel._answers.value?.size!! != 0) {
+                    binding.numText.text = viewModel._polls.value?.size.toString()
+                    var suma: Int = 0
+                    for (answer in viewModel._answers.value!!) {
+                        var cont: Int = 0
+                        var final: Int = 0
+                        for (question in viewModel._qtns.value!!) {
+                            if (question.Id!! == answer.question_id!!)
+                                final = cont
+                            cont++
+                        }
+                        if (viewModel._qtns.value?.get(final)?.type!! == 2) {
+                            suma += answer.answer_number!!
+                        }
+                    }
+                    binding.ratingText.text = (suma / viewModel._polls.value?.size!!).toString()
+                } else {
+                    findNavController().navigate(R.id.action_answerFragment_to_titleFragment)
                 }
-                if (viewModel._qtns.value?.get(final)?.type!! == 2)
-                {
-                    suma += answer.answer_number!!
-                }
-            }
-            binding.ratingText.text = (suma/viewModel._polls.value?.size!!).toString()
-            }
-            else
-            {
-                findNavController().navigate(R.id.action_answerFragment_to_titleFragment)
             }
         })
         /*viewModel._cont.observe(viewLifecycleOwner, Observer {

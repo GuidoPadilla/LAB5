@@ -8,12 +8,16 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.RecyclerView
 import com.example.lab5.databinding.FragmentFinalBinding
 
 /**
  * A simple [Fragment] subclass.
  */
 class FinalFragment : Fragment() {
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewManager: RecyclerView.LayoutManager
 
     private lateinit var binding: FragmentFinalBinding
     private lateinit var viewModel: MainViewModel
@@ -21,6 +25,7 @@ class FinalFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_final,
@@ -31,6 +36,9 @@ class FinalFragment : Fragment() {
 
         val dataSource = QuestionDatabase.getInstance(application).questionDatabaseDao
         val viewModelFactory = MainViewModelFactory(dataSource, application)
+
+        val adapter = AnswerAdapter()
+        binding.answerList.adapter = adapter
 
         viewModel =
             ViewModelProviders.of(
@@ -47,7 +55,12 @@ class FinalFragment : Fragment() {
         })
 
         viewModel._answers.observe(viewLifecycleOwner, Observer {
-            var string: String = ""
+            it?.let {
+                if(!it.isNullOrEmpty()) {
+                    adapter.data = it
+                }
+            }
+            /*var string: String = ""
             var cont: Int = 1
             for (poll in viewModel._polls.value!!){
                 string += "Encuesta " + cont.toString()+ "\n" + "Fecha: "+poll.create_date + ":\n"
@@ -58,7 +71,7 @@ class FinalFragment : Fragment() {
                 }
                 cont++
             }
-            binding.text.text = string
+            binding.text.text = string*/
         })
 
 
